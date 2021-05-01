@@ -2,6 +2,29 @@
 
 namespace SniffCore
 {
+    /// <summary>
+    /// Indicates that another method is still executing.
+    /// </summary>
+    /// <example>
+    /// <code lang="csharp">
+    /// <![CDATA[
+    /// private WorkingIndicator _locker;
+    ///
+    /// private void DoAnything()
+    /// {
+    ///     using (_locker = new WorkingIndicator())
+    ///     {
+    ///     }
+    /// }
+    ///
+    /// private void AnybodyElse()
+    /// {
+    ///     if (_locker?.IsActive == true)
+    ///         return;
+    /// }
+    /// ]]>
+    /// </code>
+    /// </example>
     public class WorkingIndicator : IDisposable
     {
         private bool _flag;

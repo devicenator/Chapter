@@ -7,8 +7,15 @@ using System.Diagnostics;
 
 namespace SniffCore
 {
+    /// <summary>
+    ///     Brings the possibility to work with processes.
+    /// </summary>
     public static class ProcessHandler
     {
+        /// <summary>
+        ///     Restarts the current process with a delay.
+        /// </summary>
+        /// <param name="delay">The delay in seconds when the process has to restart.</param>
         public static void Restart(int delay = 2)
         {
             var process = Process.GetCurrentProcess();

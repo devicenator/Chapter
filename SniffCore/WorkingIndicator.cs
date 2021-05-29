@@ -14,22 +14,28 @@ namespace SniffCore
     /// <example>
     ///     <code lang="csharp">
     /// <![CDATA[
-    /// private WorkingIndicator _locker;
-    /// 
-    /// private void DoAnything()
+    /// public class ViewModel : ObservableObject
     /// {
-    ///     using (_locker = new WorkingIndicator())
+    ///     private WorkingIndicator _locker;
+    ///     
+    ///     private void DoAnything()
     ///     {
+    ///         using (_locker = new WorkingIndicator())
+    ///         {
+    ///             // Do Anything
+    ///         }
+    ///     }
+    ///     
+    ///     private void AnybodyElse()
+    ///     {
+    ///         if (WorkingIndicator.IsActive(_locker))
+    ///             return;
+    ///
+    ///         // Do Anything
     ///     }
     /// }
-    /// 
-    /// private void AnybodyElse()
-    /// {
-    ///     if (WorkingIndicator.IsActive(_locker))
-    ///         return;
-    /// }
     /// ]]>
-    /// </code>
+    ///     </code>
     /// </example>
     public class WorkingIndicator : IDisposable
     {

@@ -13,6 +13,35 @@ namespace SniffCore
     ///     Is a base class for ViewModels implementing the <see cref="INotifyPropertyChanging" /> and
     ///     <see cref="INotifyPropertyChanged" /> and provides easy access to that.
     /// </summary>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     private string _backingField1;
+    ///     private string _backingField2;
+    /// 
+    ///     public string Property1
+    ///     {
+    ///         get => _backingField1;
+    ///         set => NotifyAndSetIfChanged(ref _backingField1, value);
+    ///     }
+    /// 
+    ///     public string Property2
+    ///     {
+    ///         get => _backingField2;
+    ///         set => NotifyAndSet(ref _backingField2, value);
+    ///     }
+    /// 
+    ///     private void SomethingHappened()
+    ///     {
+    ///         _backingField1 = "something";
+    ///         NotifyPropertyChanged(nameof(Property1));
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public abstract class ObservableObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
         /// <summary>

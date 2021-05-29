@@ -11,6 +11,48 @@ namespace SniffCore
     /// <summary>
     ///     Provides a way to call an async callback from an ICommand.
     /// </summary>
+    /// <example>
+    ///     <code lang="XAML">
+    /// <![CDATA[
+    /// <Window>
+    ///     <StackPanel>
+    ///         <Button Content="Command 1" Command="{Binding TheCommand1}" />
+    ///         <Button Content="Command 2" Command="{Binding TheCommand2}" />
+    ///     </StackPanel>
+    /// </Window>
+    /// ]]>
+    ///     </code>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public void ViewModel()
+    ///     {
+    ///         TheCommand1 = new AsyncDelegateCommand(ExecuteAsync);
+    ///         TheCommand2 = new AsyncDelegateCommand(CanExecute, ExecuteAsync);
+    ///     }
+    /// 
+    ///     public IDelegateCommand TheCommand1 { get; }
+    ///     public IDelegateCommand TheCommand2 { get; }
+    /// 
+    ///     private bool CanExecute()
+    ///     {
+    ///         // Check if can execute
+    ///         return true;
+    ///     }
+    /// 
+    ///     private async Task ExecuteAsync()
+    ///     {
+    ///         // Execute Async
+    ///         await Task.CompletedTask;
+    /// 
+    ///         TheCommand1.RaiseCanExecuteChanged(); // Checks the CanExecute again
+    ///         TheCommand2.RaiseCanExecuteChanged();
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public sealed class AsyncDelegateCommand : IDelegateCommand
     {
         private readonly Func<bool> _canExecuteCallback;
@@ -86,6 +128,48 @@ namespace SniffCore
     ///     Provides a way to call an async callback from an ICommand.
     /// </summary>
     /// <typeparam name="T">The command parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="XAML">
+    /// <![CDATA[
+    /// <Window>
+    ///     <StackPanel>
+    ///         <Button Content="Command 1" Command="{Binding TheCommand1}" />
+    ///         <Button Content="Command 2" Command="{Binding TheCommand2}" />
+    ///     </StackPanel>
+    /// </Window>
+    /// ]]>
+    ///     </code>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public void ViewModel()
+    ///     {
+    ///         TheCommand1 = new AsyncDelegateCommand<string>(ExecuteAsync);
+    ///         TheCommand2 = new AsyncDelegateCommand<string>(CanExecute, ExecuteAsync);
+    ///     }
+    /// 
+    ///     public IDelegateCommand TheCommand1 { get; }
+    ///     public IDelegateCommand TheCommand2 { get; }
+    /// 
+    ///     private bool CanExecute(string argument)
+    ///     {
+    ///         // Check if can execute
+    ///         return true;
+    ///     }
+    /// 
+    ///     private async Task ExecuteAsync(string argument)
+    ///     {
+    ///         // Execute Async
+    ///         await Task.CompletedTask;
+    /// 
+    ///         TheCommand1.RaiseCanExecuteChanged(); // Checks the CanExecute again
+    ///         TheCommand2.RaiseCanExecuteChanged();
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public sealed class AsyncDelegateCommand<T> : IDelegateCommand
     {
         private readonly Func<T, bool> _canExecuteCallback;

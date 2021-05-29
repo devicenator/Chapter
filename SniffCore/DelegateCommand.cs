@@ -10,6 +10,47 @@ namespace SniffCore
     /// <summary>
     ///     Provides a way to call a callback from an ICommand.
     /// </summary>
+    /// <example>
+    ///     <code lang="XAML">
+    /// <![CDATA[
+    /// <Window>
+    ///     <StackPanel>
+    ///         <Button Content="Command 1" Command="{Binding TheCommand1}" />
+    ///         <Button Content="Command 2" Command="{Binding TheCommand2}" />
+    ///     </StackPanel>
+    /// </Window>
+    /// ]]>
+    ///     </code>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public void ViewModel()
+    ///     {
+    ///         TheCommand1 = new DelegateCommand(Execute);
+    ///         TheCommand2 = new DelegateCommand(CanExecute, Execute);
+    ///     }
+    /// 
+    ///     public IDelegateCommand TheCommand1 { get; }
+    ///     public IDelegateCommand TheCommand2 { get; }
+    /// 
+    ///     private bool CanExecute()
+    ///     {
+    ///         // Check if can execute
+    ///         return true;
+    ///     }
+    /// 
+    ///     private void Execute()
+    ///     {
+    ///         // Execute
+    /// 
+    ///         TheCommand1.RaiseCanExecuteChanged(); // Checks the CanExecute again
+    ///         TheCommand2.RaiseCanExecuteChanged();
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public sealed class DelegateCommand : IDelegateCommand
     {
         private readonly Func<bool> _canExecuteCallback;
@@ -75,6 +116,47 @@ namespace SniffCore
     ///     Provides a way to call a callback from an ICommand.
     /// </summary>
     /// <typeparam name="T">The command parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="XAML">
+    /// <![CDATA[
+    /// <Window>
+    ///     <StackPanel>
+    ///         <Button Content="Command 1" Command="{Binding TheCommand1}" />
+    ///         <Button Content="Command 2" Command="{Binding TheCommand2}" />
+    ///     </StackPanel>
+    /// </Window>
+    /// ]]>
+    ///     </code>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public void ViewModel()
+    ///     {
+    ///         TheCommand1 = new DelegateCommand<string>(Execute);
+    ///         TheCommand2 = new DelegateCommand<string>(CanExecute, Execute);
+    ///     }
+    /// 
+    ///     public IDelegateCommand TheCommand1 { get; }
+    ///     public IDelegateCommand TheCommand2 { get; }
+    /// 
+    ///     private bool CanExecute(string argument)
+    ///     {
+    ///         // Check if can execute
+    ///         return true;
+    ///     }
+    /// 
+    ///     private void Execute(string argument)
+    ///     {
+    ///         // Execute
+    /// 
+    ///         TheCommand1.RaiseCanExecuteChanged(); // Checks the CanExecute again
+    ///         TheCommand2.RaiseCanExecuteChanged();
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public sealed class DelegateCommand<T> : IDelegateCommand
     {
         private readonly Func<T, bool> _canExecuteCallback;

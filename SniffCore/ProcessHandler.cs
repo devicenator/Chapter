@@ -13,6 +13,22 @@ namespace SniffCore
     /// <summary>
     ///     Brings the possibility to work with processes.
     /// </summary>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public void ChangeSetting()
+    ///     {
+    ///         // Apply new setting
+    ///
+    ///         // Restart application
+    ///         ProcessHandler.Restart(4);
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public static class ProcessHandler
     {
         /// <summary>
@@ -30,7 +46,10 @@ namespace SniffCore
         /// </summary>
         /// <param name="processId">The ID of the process to restart.</param>
         /// <param name="delay">The delay in seconds when the process has to restart.</param>
-        /// <exception cref="ArgumentException">The process specified by the processId parameter is not running. The identifier might be expired.</exception>
+        /// <exception cref="ArgumentException">
+        ///     The process specified by the processId parameter is not running. The identifier
+        ///     might be expired.
+        /// </exception>
         public static void Restart(int processId, int delay)
         {
             var process = Process.GetProcessById(processId);

@@ -15,6 +15,34 @@ namespace SniffCore
     ///     An EventArgs with one parameter.
     /// </summary>
     /// <typeparam name="T">The parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int>(first));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int> e)
+    ///     {
+    ///         // e.Item1
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T> : EventArgs
     {
         /// <summary>
@@ -37,6 +65,35 @@ namespace SniffCore
     /// </summary>
     /// <typeparam name="T1">The first parameter type.</typeparam>
     /// <typeparam name="T2">The second parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int>(first, second));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2> : EventArgs<T1>
     {
         /// <summary>
@@ -62,6 +119,36 @@ namespace SniffCore
     /// <typeparam name="T1">The first parameter type.</typeparam>
     /// <typeparam name="T2">The second parameter type.</typeparam>
     /// <typeparam name="T3">The third parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second, int third)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int, int>(first, second, third));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///         // e.Item3
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2, T3> : EventArgs<T1, T2>
     {
         /// <summary>
@@ -89,6 +176,37 @@ namespace SniffCore
     /// <typeparam name="T2">The second parameter type.</typeparam>
     /// <typeparam name="T3">The third parameter type.</typeparam>
     /// <typeparam name="T4">The fourth parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int, int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second, int third, int fourth)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int, int, int>(first, second, third, fourth));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int, int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///         // e.Item3
+    ///         // e.Item4
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2, T3, T4> : EventArgs<T1, T2, T3>
     {
         /// <summary>
@@ -118,6 +236,38 @@ namespace SniffCore
     /// <typeparam name="T3">The third parameter type.</typeparam>
     /// <typeparam name="T4">The fourth parameter type.</typeparam>
     /// <typeparam name="T5">The fifth parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int, int, int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second, int third, int fourth, int fifth)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int, int, int, int>(first, second, third, fourth, fifth));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int, int, int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///         // e.Item3
+    ///         // e.Item4
+    ///         // e.Item5
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2, T3, T4, T5> : EventArgs<T1, T2, T3, T4>
     {
         /// <summary>
@@ -149,6 +299,39 @@ namespace SniffCore
     /// <typeparam name="T4">The fourth parameter type.</typeparam>
     /// <typeparam name="T5">The fifth parameter type.</typeparam>
     /// <typeparam name="T6">The sixth parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int, int, int, int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second, int third, int fourth, int fifth, int sixth)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int, int, int, int, int>(first, second, third, fourth, fifth, sixth));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int, int, int, int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///         // e.Item3
+    ///         // e.Item4
+    ///         // e.Item5
+    ///         // e.Item6
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2, T3, T4, T5, T6> : EventArgs<T1, T2, T3, T4, T5>
     {
         /// <summary>
@@ -182,6 +365,40 @@ namespace SniffCore
     /// <typeparam name="T5">The fifth parameter type.</typeparam>
     /// <typeparam name="T6">The sixth parameter type.</typeparam>
     /// <typeparam name="T7">The seventh parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int, int, int, int, int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second, int third, int fourth, int fifth, int sixth, int seventh)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int, int, int, int, int, int>(first, second, third, fourth, fifth, sixth, seventh));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int, int, int, int, int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///         // e.Item3
+    ///         // e.Item4
+    ///         // e.Item5
+    ///         // e.Item6
+    ///         // e.Item7
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2, T3, T4, T5, T6, T7> : EventArgs<T1, T2, T3, T4, T5, T6>
     {
         /// <summary>
@@ -217,6 +434,41 @@ namespace SniffCore
     /// <typeparam name="T6">The sixth parameter type.</typeparam>
     /// <typeparam name="T7">The seventh parameter type.</typeparam>
     /// <typeparam name="T8">The eight parameter type.</typeparam>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public event EventHandler<EventArgs<int, int, int, int, int, int, int, int>> TheEvent;
+    ///     
+    ///     private void OnTheEvent(int first, int second, int third, int fourth, int fifth, int sixth, int seventh, int eight)
+    ///     {
+    ///         TheEvent?.Invoke(this, new EventArgs<int, int, int, int, int, int, int, int>(first, second, third, fourth, fifth, sixth, seventh, eight));
+    ///     }
+    /// }
+    /// 
+    /// public class OtherViewModel
+    /// {
+    ///     public OtherViewModel(ViewModel viewModel)
+    ///     {
+    ///         viewModel.TheEvent += OnTheEvent;
+    ///     }
+    /// 
+    ///     private void OnTheEvent(object? sender, EventArgs<int, int, int, int, int, int, int, int> e)
+    ///     {
+    ///         // e.Item1
+    ///         // e.Item2
+    ///         // e.Item3
+    ///         // e.Item4
+    ///         // e.Item5
+    ///         // e.Item6
+    ///         // e.Item7
+    ///         // e.Item8
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public class EventArgs<T1, T2, T3, T4, T5, T6, T7, T8> : EventArgs<T1, T2, T3, T4, T5, T6, T7>
     {
         /// <summary>

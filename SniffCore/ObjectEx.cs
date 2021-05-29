@@ -8,6 +8,27 @@ namespace SniffCore
     /// <summary>
     ///     Extends the <see cref="object" /> with some helper methods.
     /// </summary>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// public class Converter : IValueConverter
+    /// {
+    ///     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    ///     {
+    ///         if (value.IsNullOrWhitespace())
+    ///             return string.Empty;
+    ///     
+    ///         return value.ToString();
+    ///     }
+    ///     
+    ///     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    ///     {
+    ///         throw new NotImplementedException();
+    ///     }
+    /// }
+    /// ]]>
+    ///     </code>
+    /// </example>
     public static class ObjectEx
     {
         /// <summary>

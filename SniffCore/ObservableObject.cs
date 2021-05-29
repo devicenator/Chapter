@@ -7,9 +7,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable RedundantAssignment
-
 namespace SniffCore
 {
     /// <summary>

@@ -19,6 +19,7 @@ namespace SniffCore
         ///     Creates a new instance of <see cref="DelegateCommand" />.
         /// </summary>
         /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public DelegateCommand(Action executeCallback)
             : this(() => true, executeCallback)
         {
@@ -29,6 +30,8 @@ namespace SniffCore
         /// </summary>
         /// <param name="canExecuteCallback">The callback to check if the command can be executed.</param>
         /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">canExecuteCallback is null</exception>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public DelegateCommand(Func<bool> canExecuteCallback, Action executeCallback)
         {
             _canExecuteCallback = canExecuteCallback ?? throw new ArgumentNullException(nameof(canExecuteCallback));
@@ -81,6 +84,7 @@ namespace SniffCore
         ///     Creates a new instance of <see cref="DelegateCommand{T}" />.
         /// </summary>
         /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public DelegateCommand(Action<T> executeCallback)
             : this(o => true, executeCallback)
         {
@@ -91,6 +95,8 @@ namespace SniffCore
         /// </summary>
         /// <param name="canExecuteCallback">The callback to check if the command can be executed.</param>
         /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">canExecuteCallback is null</exception>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public DelegateCommand(Func<T, bool> canExecuteCallback, Action<T> executeCallback)
         {
             _canExecuteCallback = canExecuteCallback ?? throw new ArgumentNullException(nameof(canExecuteCallback));

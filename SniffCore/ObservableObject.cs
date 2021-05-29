@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //
 
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -53,8 +54,12 @@ namespace SniffCore
         /// <param name="backingField">The property backing field.</param>
         /// <param name="newValue">The new property value.</param>
         /// <param name="propertyName">The name of the property.</param>
+        /// <exception cref="ArgumentNullException">backingField is null.</exception>
         protected void NotifyAndSet<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null)
         {
+            if (backingField == null)
+                throw new ArgumentNullException(nameof(backingField));
+
             NotifyPropertyChanging(propertyName);
             backingField = newValue;
             NotifyPropertyChanged(propertyName);
@@ -68,6 +73,7 @@ namespace SniffCore
         /// <param name="backingField">The property backing field.</param>
         /// <param name="newValue">The new property value.</param>
         /// <param name="propertyName">The name of the property.</param>
+        /// <exception cref="ArgumentNullException">backingField is null.</exception>
         protected void NotifyAndSetIfChanged<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null)
         {
             if (!Equals(backingField, newValue))

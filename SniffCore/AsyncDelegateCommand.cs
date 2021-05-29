@@ -21,6 +21,7 @@ namespace SniffCore
         ///     Creates a new instance of <see cref="AsyncDelegateCommand" />.
         /// </summary>
         /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public AsyncDelegateCommand(Func<Task> executeCallback)
             : this(() => true, executeCallback)
         {
@@ -31,6 +32,8 @@ namespace SniffCore
         /// </summary>
         /// <param name="canExecuteCallback">The callback to check if the command can be executed.</param>
         /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">canExecuteCallback is null</exception>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public AsyncDelegateCommand(Func<bool> canExecuteCallback, Func<Task> executeCallback)
         {
             _canExecuteCallback = canExecuteCallback ?? throw new ArgumentNullException(nameof(canExecuteCallback));
@@ -93,6 +96,7 @@ namespace SniffCore
         ///     Creates a new instance of <see cref="AsyncDelegateCommand{T}" />.
         /// </summary>
         /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public AsyncDelegateCommand(Func<T, Task> executeCallback)
             : this(o => true, executeCallback)
         {
@@ -103,6 +107,8 @@ namespace SniffCore
         /// </summary>
         /// <param name="canExecuteCallback">The callback to check if the command can be executed.</param>
         /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <exception cref="ArgumentNullException">canExecuteCallback is null</exception>
+        /// <exception cref="ArgumentNullException">executeCallback is null</exception>
         public AsyncDelegateCommand(Func<T, bool> canExecuteCallback, Func<T, Task> executeCallback)
         {
             _canExecuteCallback = canExecuteCallback ?? throw new ArgumentNullException(nameof(canExecuteCallback));

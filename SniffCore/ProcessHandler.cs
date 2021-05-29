@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 //
 
+using System;
 using System.Diagnostics;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -29,6 +30,7 @@ namespace SniffCore
         /// </summary>
         /// <param name="processId">The ID of the process to restart.</param>
         /// <param name="delay">The delay in seconds when the process has to restart.</param>
+        /// <exception cref="ArgumentException">The process specified by the processId parameter is not running. The identifier might be expired.</exception>
         public static void Restart(int processId, int delay)
         {
             var process = Process.GetProcessById(processId);
@@ -52,8 +54,12 @@ namespace SniffCore
         /// </summary>
         /// <param name="process">The process to restart.</param>
         /// <param name="delay">The delay in seconds when the process has to restart.</param>
+        /// <exception cref="ArgumentNullException">process is null.</exception>
         public static void Restart(Process process, int delay = 2)
         {
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
             var module = process.MainModule;
             if (module == null)
                 return;

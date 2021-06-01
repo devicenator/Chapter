@@ -4,7 +4,7 @@ SniffCore
 SniffCore brings base classes and basic operations to work in an MVVM environment.
 
 ## How To
-* [Wiki](http://wiki.sniffcore.com/index.php?title=SniffCore)
+* [Documentation](http://wiki.sniffcore.com)
 * [Website](http://sniffcore.com)
 
 ## License

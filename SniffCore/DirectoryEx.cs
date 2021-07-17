@@ -7,6 +7,20 @@ namespace SniffCore
     /// <summary>
     ///     Provides copy directories and move over system partitions.
     /// </summary>
+    /// <example>
+    /// <code lang="csharp">
+    /// <![CDATA[
+    /// public class ViewModel : ObservableObject
+    /// {
+    ///     public void EnsureCopied(string destination)
+    ///     {
+    ///         if (!Directory.Exists(destination))
+    ///             DirectoryEx.Copy(@"C:\MyData", destination);
+    ///     }
+    /// }
+    /// ]]>
+    /// </code>
+    /// </example>
     public static class DirectoryEx
     {
         /// <summary>

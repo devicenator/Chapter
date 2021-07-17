@@ -5,6 +5,25 @@ namespace SniffCore
     /// <summary>
     ///     Provides methods for an easy work with namespace and type names in combination with nameof.
     /// </summary>
+    /// <example>
+    ///     <code lang="csharp">
+    /// <![CDATA[
+    /// namespace Application.ViewModels
+    /// {
+    ///     public class ViewModel : ObservableObject
+    ///     {
+    ///         public string Name { get; set; }
+    /// 
+    ///         public void WriteLog()
+    ///         {
+    ///             Log.Write("Name set on " + NameOf.FullName<ViewModel>(nameof(Name));
+    ///             // Shows: "Name set on Application.ViewModels.ViewModel.Name"
+    ///         }
+    ///     }
+    /// }
+    /// ]]>
+    /// </code>
+    /// </example>
     public static class NameOf
     {
         /// <summary>

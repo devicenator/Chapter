@@ -9,8 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [1.1.0] - 2021-07-17
 ### Added
-NameOf (Build name of inclusive class and namespace)
-Add copy or move directory over partitions
+* NameOf (Build name of inclusive class and namespace)
+* Add copy or move directory over partitions
 
 ## [1.0.0] - 2021-06-13
 ### Added

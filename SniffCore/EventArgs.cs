@@ -5,10 +5,6 @@
 
 using System;
 
-// ReSharper disable MemberCanBeProtected.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace SniffCore
 {
     /// <summary>

@@ -16,6 +16,30 @@ namespace SniffCore.Tests
         }
 
         [Test]
+        public void IsActive_CalledInsideTheUsing_ReturnsTrue()
+        {
+            WorkingIndicator indicator;
+            using (indicator = new WorkingIndicator())
+            {
+                var result = WorkingIndicator.IsActive(indicator);
+            
+                Assert.That(result, Is.True);
+            }
+        }
+
+        [Test]
+        public void IsActive_CalledOutsideTheUsing_ReturnsFalse()
+        {
+            WorkingIndicator indicator;
+            using (indicator = new WorkingIndicator())
+            {
+            }
+
+            var result = WorkingIndicator.IsActive(indicator);
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
         public void IsActive_CalledWithDisposedIndicator_ReturnsFalse()
         {
             var indicator = new WorkingIndicator();

@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 ### Added
 * NotifyDataErrorInfo for an easy handling of input validations
+* ValidatableObservableObject, a new ObservableObject base class which implements the NotifyDataErrorInfo for a more easy usage
+* AsyncValidatableObservableObject, a ValidatableObservableObject but in this case the validation overload is already a method with a Task return.
 
 ## [1.1.0] - 2021-07-17
 ### Added

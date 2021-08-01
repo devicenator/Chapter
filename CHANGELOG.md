@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Ideas/Upcoming]
 
 ## [Unreleased]
+
+## [1.2.0] - 2021-08-01
 ### Added
 * NotifyDataErrorInfo for an easy handling of input validations
 * ValidatableObservableObject, a new ObservableObject base class which implements the NotifyDataErrorInfo for a more easy usage

@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.2.1] - 2021-08-13
+### Fixed
+* The ObservableObject NotifyAndSetIf and NotifyAndSetIfChanged crashed if the backing field is a null string
+
 ## [1.2.0] - 2021-08-01
 ### Added
 * NotifyDataErrorInfo for an easy handling of input validations

@@ -80,12 +80,8 @@ namespace SniffCore
         /// <param name="backingField">The property backing field.</param>
         /// <param name="newValue">The new property value.</param>
         /// <param name="propertyName">The name of the property.</param>
-        /// <exception cref="ArgumentNullException">backingField is null.</exception>
         protected void NotifyAndSet<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null)
         {
-            if (backingField == null)
-                throw new ArgumentNullException(nameof(backingField));
-
             NotifyPropertyChanging(propertyName);
             backingField = newValue;
             NotifyPropertyChanged(propertyName);

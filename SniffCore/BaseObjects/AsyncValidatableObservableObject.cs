@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace SniffCore.Validation
+// ReSharper disable once CheckNamespace
+
+namespace SniffCore
 {
     /// <summary>
     ///     Is a base class for ViewModels implementing the <see cref="INotifyPropertyChanging" />,

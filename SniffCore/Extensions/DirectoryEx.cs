@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Security;
 
+// ReSharper disable once CheckNamespace
+
 namespace SniffCore
 {
     /// <summary>

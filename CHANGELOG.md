@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.2.2] - 2021-09-17
+### Changed
+* Removed objects out of the Validation namespace
+
 ## [1.2.1] - 2021-08-13
 ### Fixed
 * The ObservableObject NotifyAndSetIf and NotifyAndSetIfChanged crashed if the backing field is a null string

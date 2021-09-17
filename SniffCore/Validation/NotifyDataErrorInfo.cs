@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace SniffCore.Validation
+// ReSharper disable once CheckNamespace
+
+namespace SniffCore
 {
     /// <summary>
     ///     Brings helper for an easy maintain of property input validations.

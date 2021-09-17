@@ -4,12 +4,13 @@
 //
 
 using System;
-using System.Threading.Tasks;
+
+// ReSharper disable once CheckNamespace
 
 namespace SniffCore
 {
     /// <summary>
-    ///     Provides a way to call an async callback from an ICommand.
+    ///     Provides a way to call a callback from an ICommand.
     /// </summary>
     /// <example>
     ///     <code lang="XAML">
@@ -28,8 +29,8 @@ namespace SniffCore
     /// {
     ///     public void ViewModel()
     ///     {
-    ///         TheCommand1 = new AsyncDelegateCommand(ExecuteAsync);
-    ///         TheCommand2 = new AsyncDelegateCommand(CanExecute, ExecuteAsync);
+    ///         TheCommand1 = new DelegateCommand(Execute);
+    ///         TheCommand2 = new DelegateCommand(CanExecute, Execute);
     ///     }
     /// 
     ///     public IDelegateCommand TheCommand1 { get; }
@@ -41,10 +42,9 @@ namespace SniffCore
     ///         return true;
     ///     }
     /// 
-    ///     private async Task ExecuteAsync()
+    ///     private void Execute()
     ///     {
-    ///         // Execute Async
-    ///         await Task.CompletedTask;
+    ///         // Execute
     /// 
     ///         TheCommand1.RaiseCanExecuteChanged(); // Checks the CanExecute again
     ///         TheCommand2.RaiseCanExecuteChanged();
@@ -53,52 +53,51 @@ namespace SniffCore
     /// ]]>
     ///     </code>
     /// </example>
-    public sealed class AsyncDelegateCommand : IDelegateCommand
+    public sealed class DelegateCommand : IDelegateCommand
     {
         private readonly Func<bool> _canExecuteCallback;
-        private readonly Func<Task> _executeCallback;
-        private bool _isBusy;
+        private readonly Action _executeCallback;
 
         /// <summary>
-        ///     Creates a new instance of <see cref="AsyncDelegateCommand" />.
+        ///     Creates a new instance of <see cref="DelegateCommand" />.
         /// </summary>
-        /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
         /// <exception cref="ArgumentNullException">executeCallback is null</exception>
-        public AsyncDelegateCommand(Func<Task> executeCallback)
+        public DelegateCommand(Action executeCallback)
             : this(() => true, executeCallback)
         {
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="AsyncDelegateCommand" />.
+        ///     Creates a new instance of <see cref="DelegateCommand" />.
         /// </summary>
         /// <param name="canExecuteCallback">The callback to check if the command can be executed.</param>
-        /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
         /// <exception cref="ArgumentNullException">canExecuteCallback is null</exception>
         /// <exception cref="ArgumentNullException">executeCallback is null</exception>
-        public AsyncDelegateCommand(Func<bool> canExecuteCallback, Func<Task> executeCallback)
+        public DelegateCommand(Func<bool> canExecuteCallback, Action executeCallback)
         {
             _canExecuteCallback = canExecuteCallback ?? throw new ArgumentNullException(nameof(canExecuteCallback));
             _executeCallback = executeCallback ?? throw new ArgumentNullException(nameof(executeCallback));
         }
 
         /// <summary>
-        ///     Checks if the async command can be executed.
+        ///     Checks if the command can be executed.
         /// </summary>
         /// <param name="parameter">unused</param>
-        /// <returns>True if the async command can be executed; otherwise false.</returns>
+        /// <returns>True if the command can be executed; otherwise false.</returns>
         public bool CanExecute(object parameter)
         {
-            return !_isBusy && _canExecuteCallback();
+            return _canExecuteCallback();
         }
 
         /// <summary>
-        ///     Executes the async callback.
+        ///     Executes the callback.
         /// </summary>
         /// <param name="parameter">unused</param>
         public void Execute(object parameter)
         {
-            ExecuteAsync();
+            _executeCallback();
         }
 
         /// <summary>
@@ -113,19 +112,10 @@ namespace SniffCore
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
-
-        private async void ExecuteAsync()
-        {
-            _isBusy = true;
-            RaiseCanExecuteChanged();
-            await _executeCallback();
-            _isBusy = false;
-            RaiseCanExecuteChanged();
-        }
     }
 
     /// <summary>
-    ///     Provides a way to call an async callback from an ICommand.
+    ///     Provides a way to call a callback from an ICommand.
     /// </summary>
     /// <typeparam name="T">The command parameter type.</typeparam>
     /// <example>
@@ -145,8 +135,8 @@ namespace SniffCore
     /// {
     ///     public void ViewModel()
     ///     {
-    ///         TheCommand1 = new AsyncDelegateCommand<string>(ExecuteAsync);
-    ///         TheCommand2 = new AsyncDelegateCommand<string>(CanExecute, ExecuteAsync);
+    ///         TheCommand1 = new DelegateCommand<string>(Execute);
+    ///         TheCommand2 = new DelegateCommand<string>(CanExecute, Execute);
     ///     }
     /// 
     ///     public IDelegateCommand TheCommand1 { get; }
@@ -158,10 +148,9 @@ namespace SniffCore
     ///         return true;
     ///     }
     /// 
-    ///     private async Task ExecuteAsync(string argument)
+    ///     private void Execute(string argument)
     ///     {
-    ///         // Execute Async
-    ///         await Task.CompletedTask;
+    ///         // Execute
     /// 
     ///         TheCommand1.RaiseCanExecuteChanged(); // Checks the CanExecute again
     ///         TheCommand2.RaiseCanExecuteChanged();
@@ -170,52 +159,51 @@ namespace SniffCore
     /// ]]>
     ///     </code>
     /// </example>
-    public sealed class AsyncDelegateCommand<T> : IDelegateCommand
+    public sealed class DelegateCommand<T> : IDelegateCommand
     {
         private readonly Func<T, bool> _canExecuteCallback;
-        private readonly Func<T, Task> _executeCallback;
-        private bool _isBusy;
+        private readonly Action<T> _executeCallback;
 
         /// <summary>
-        ///     Creates a new instance of <see cref="AsyncDelegateCommand{T}" />.
+        ///     Creates a new instance of <see cref="DelegateCommand{T}" />.
         /// </summary>
-        /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
         /// <exception cref="ArgumentNullException">executeCallback is null</exception>
-        public AsyncDelegateCommand(Func<T, Task> executeCallback)
+        public DelegateCommand(Action<T> executeCallback)
             : this(o => true, executeCallback)
         {
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="AsyncDelegateCommand{T}" />.
+        ///     Creates a new instance of <see cref="DelegateCommand{T}" />.
         /// </summary>
         /// <param name="canExecuteCallback">The callback to check if the command can be executed.</param>
-        /// <param name="executeCallback">The async callback to execute if the command is triggered.</param>
+        /// <param name="executeCallback">The callback to execute if the command is triggered.</param>
         /// <exception cref="ArgumentNullException">canExecuteCallback is null</exception>
         /// <exception cref="ArgumentNullException">executeCallback is null</exception>
-        public AsyncDelegateCommand(Func<T, bool> canExecuteCallback, Func<T, Task> executeCallback)
+        public DelegateCommand(Func<T, bool> canExecuteCallback, Action<T> executeCallback)
         {
             _canExecuteCallback = canExecuteCallback ?? throw new ArgumentNullException(nameof(canExecuteCallback));
             _executeCallback = executeCallback ?? throw new ArgumentNullException(nameof(executeCallback));
         }
 
         /// <summary>
-        ///     Checks if the async command can be executed.
+        ///     Checks if the command can be executed.
         /// </summary>
         /// <param name="parameter">The command parameter cast to the parameter type.</param>
-        /// <returns>True if the async command can be executed; otherwise false.</returns>
+        /// <returns>True if the command can be executed; otherwise false.</returns>
         public bool CanExecute(object parameter)
         {
-            return !_isBusy && _canExecuteCallback((T) parameter);
+            return _canExecuteCallback((T) parameter);
         }
 
         /// <summary>
-        ///     Executes the async callback.
+        ///     Executes the callback.
         /// </summary>
         /// <param name="parameter">The command parameter cast to the parameter type.</param>
         public void Execute(object parameter)
         {
-            ExecuteAsync(parameter);
+            _executeCallback((T) parameter);
         }
 
         /// <summary>
@@ -229,15 +217,6 @@ namespace SniffCore
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private async void ExecuteAsync(object parameter)
-        {
-            _isBusy = true;
-            RaiseCanExecuteChanged();
-            await _executeCallback((T) parameter);
-            _isBusy = false;
-            RaiseCanExecuteChanged();
         }
     }
 }

@@ -4,7 +4,10 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 // ReSharper disable once CheckNamespace
 
@@ -26,11 +29,30 @@ namespace SniffCore
     ///         ProcessHandler.Restart(4);
     ///     }
     /// }
+    ///
+    /// public class Bootstrapper
+    /// {
+    ///     public void CheckSingleInstance()
+    ///     {
+    ///         var other = ProcessHandler.GetSimilarProcess();
+    ///         if (other != null)
+    ///         {
+    ///             ProcessHandler.BringInFront(other);
+    ///             Application.Current.Shutdown();
+    ///         }
+    ///     }
+    /// }
     /// ]]>
     ///     </code>
     /// </example>
     public static class ProcessHandler
     {
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+
         /// <summary>
         ///     Restarts the current process with a delay.
         /// </summary>
@@ -92,6 +114,90 @@ namespace SniffCore
             };
             Process.Start(info);
             process.Kill();
+        }
+
+        /// <summary>
+        ///     Gets all similar processes except the current.
+        /// </summary>
+        /// <returns>The list of similar processes.</returns>
+        public static IEnumerable<Process> GetSimilarProcesses()
+        {
+            var current = Process.GetCurrentProcess();
+            return Process.GetProcessesByName(current.ProcessName).Where(x => x.Id != current.Id);
+        }
+
+        /// <summary>
+        ///     Gets the next possible similar process except the current.
+        /// </summary>
+        /// <returns>The next similar processes if found; otherwise null.</returns>
+        public static Process GetSimilarProcess()
+        {
+            return GetSimilarProcesses().FirstOrDefault();
+        }
+
+        /// <summary>
+        ///     Brings the given process on front. Normalizes it if minimized.
+        /// </summary>
+        /// <param name="process">The process to bring on front.</param>
+        /// <exception cref="NotSupportedException">The given process has no main window.</exception>
+        public static void BringInFront(Process process)
+        {
+            if (process.MainWindowHandle == IntPtr.Zero)
+                throw new NotSupportedException("The given process must have a main window.");
+
+            SetForegroundWindow(process.MainWindowHandle);
+            ShowWindow(process.MainWindowHandle, WindowShowStyle.Restore);
+        }
+
+        /// <summary>
+        ///     Executes a given process without display it with parameters; waits for the process to end and returns it result
+        ///     code and console output.
+        /// </summary>
+        /// <param name="executable">The process to execute.</param>
+        /// <param name="parameters">The process parameters.</param>
+        /// <returns>The result and output the process gave at runtime.</returns>
+        /// <exception cref="InvalidOperationException">The process could not be started.</exception>
+        public static ProcessResult ExecuteSilentlyAndWait(string executable, string parameters)
+        {
+            var startInfo = new ProcessStartInfo(executable)
+            {
+                Arguments = parameters,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true
+            };
+            var process = Process.Start(startInfo);
+            if (process == null)
+                throw new InvalidOperationException($"The process ('{executable}') could not be started.");
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            return new ProcessResult(process.ExitCode, output);
+        }
+
+        /// <summary>
+        ///     Opens the given in the default application configured in the local system.
+        /// </summary>
+        /// <param name="file">The file to open.</param>
+        public static void OpenFileInLocalApp(string file)
+        {
+            Process.Start(new ProcessStartInfo(file) {UseShellExecute = true});
+        }
+
+        private enum WindowShowStyle : uint
+        {
+            Hide = 0,
+            ShowNormal = 1,
+            ShowMinimized = 2,
+            ShowMaximized = 3,
+            Maximize = 3,
+            ShowNormalNoActivate = 4,
+            Show = 5,
+            Minimize = 6,
+            ShowMinNoActivate = 7,
+            ShowNoActivate = 8,
+            Restore = 9,
+            ShowDefault = 10,
+            ForceMinimized = 11
         }
     }
 }

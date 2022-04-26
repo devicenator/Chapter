@@ -5,7 +5,7 @@
     <Authors>David Wendland</Authors>
     <Company>David Wendland</Company>
     <Description>SniffCore brings base classes and basic operations to work in an MVVM environment.</Description>
-    <Copyright>Copyright (c) 2021 David Wendland</Copyright>
+    <Copyright>Copyright (c) 2022 David Wendland</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>http://www.sniffcore.com</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devicenator/SniffCore</RepositoryUrl>

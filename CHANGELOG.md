@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [1.2.4] - 2022-05-19
+### Added
+* AsyncEventHandler and extensions for it
+
 ## [1.2.3] - 2021-11-27
 ### Added
 * Handling for similag processes to the ProcessHandler

@@ -11,193 +11,192 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore
+namespace SniffCore;
+
+/// <summary>
+///     Brings the possibility to work with processes.
+/// </summary>
+/// <example>
+///     <code lang="csharp">
+/// <![CDATA[
+/// public class ViewModel : ObservableObject
+/// {
+///     public void ChangeSetting()
+///     {
+///         // Apply new setting
+///
+///         // Restart application
+///         ProcessHandler.Restart(4);
+///     }
+/// }
+///
+/// public class Bootstrapper
+/// {
+///     public void CheckSingleInstance()
+///     {
+///         var other = ProcessHandler.GetSimilarProcess();
+///         if (other != null)
+///         {
+///             ProcessHandler.BringInFront(other);
+///             Application.Current.Shutdown();
+///         }
+///     }
+/// }
+/// ]]>
+///     </code>
+/// </example>
+public static class ProcessHandler
 {
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+
     /// <summary>
-    ///     Brings the possibility to work with processes.
+    ///     Restarts the current process with a delay.
     /// </summary>
-    /// <example>
-    ///     <code lang="csharp">
-    /// <![CDATA[
-    /// public class ViewModel : ObservableObject
-    /// {
-    ///     public void ChangeSetting()
-    ///     {
-    ///         // Apply new setting
-    ///
-    ///         // Restart application
-    ///         ProcessHandler.Restart(4);
-    ///     }
-    /// }
-    ///
-    /// public class Bootstrapper
-    /// {
-    ///     public void CheckSingleInstance()
-    ///     {
-    ///         var other = ProcessHandler.GetSimilarProcess();
-    ///         if (other != null)
-    ///         {
-    ///             ProcessHandler.BringInFront(other);
-    ///             Application.Current.Shutdown();
-    ///         }
-    ///     }
-    /// }
-    /// ]]>
-    ///     </code>
-    /// </example>
-    public static class ProcessHandler
+    /// <param name="delay">The delay in seconds when the process has to restart.</param>
+    public static void Restart(int delay = 2)
     {
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        var process = Process.GetCurrentProcess();
+        Restart(process, delay);
+    }
 
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+    /// <summary>
+    ///     Restarts the process by its process ID with a delay.
+    /// </summary>
+    /// <param name="processId">The ID of the process to restart.</param>
+    /// <param name="delay">The delay in seconds when the process has to restart.</param>
+    /// <exception cref="ArgumentException">
+    ///     The process specified by the processId parameter is not running. The identifier
+    ///     might be expired.
+    /// </exception>
+    public static void Restart(int processId, int delay)
+    {
+        var process = Process.GetProcessById(processId);
+        Restart(process, delay);
+    }
 
-        /// <summary>
-        ///     Restarts the current process with a delay.
-        /// </summary>
-        /// <param name="delay">The delay in seconds when the process has to restart.</param>
-        public static void Restart(int delay = 2)
-        {
-            var process = Process.GetCurrentProcess();
+    /// <summary>
+    ///     Restarts all processes with a specific name.
+    /// </summary>
+    /// <param name="processName">The name of the processes to restart.</param>
+    /// <param name="delay">The delay in seconds when the process has to restart.</param>
+    public static void Restart(string processName, int delay = 2)
+    {
+        var processes = Process.GetProcessesByName(processName);
+        foreach (var process in processes)
             Restart(process, delay);
-        }
+    }
 
-        /// <summary>
-        ///     Restarts the process by its process ID with a delay.
-        /// </summary>
-        /// <param name="processId">The ID of the process to restart.</param>
-        /// <param name="delay">The delay in seconds when the process has to restart.</param>
-        /// <exception cref="ArgumentException">
-        ///     The process specified by the processId parameter is not running. The identifier
-        ///     might be expired.
-        /// </exception>
-        public static void Restart(int processId, int delay)
+    /// <summary>
+    ///     Restarts the given process with a delay.
+    /// </summary>
+    /// <param name="process">The process to restart.</param>
+    /// <param name="delay">The delay in seconds when the process has to restart.</param>
+    /// <exception cref="ArgumentNullException">process is null.</exception>
+    public static void Restart(Process process, int delay = 2)
+    {
+        if (process == null)
+            throw new ArgumentNullException(nameof(process));
+
+        var module = process.MainModule;
+        if (module == null)
+            return;
+
+        var info = new ProcessStartInfo
         {
-            var process = Process.GetProcessById(processId);
-            Restart(process, delay);
-        }
+            Arguments = $"/C ping 127.0.0.1 -n {delay} && \"{module.FileName}\"",
+            WindowStyle = ProcessWindowStyle.Hidden,
+            CreateNoWindow = true,
+            FileName = "cmd.exe"
+        };
+        Process.Start(info);
+        process.Kill();
+    }
 
-        /// <summary>
-        ///     Restarts all processes with a specific name.
-        /// </summary>
-        /// <param name="processName">The name of the processes to restart.</param>
-        /// <param name="delay">The delay in seconds when the process has to restart.</param>
-        public static void Restart(string processName, int delay = 2)
+    /// <summary>
+    ///     Gets all similar processes except the current.
+    /// </summary>
+    /// <returns>The list of similar processes.</returns>
+    public static IEnumerable<Process> GetSimilarProcesses()
+    {
+        var current = Process.GetCurrentProcess();
+        return Process.GetProcessesByName(current.ProcessName).Where(x => x.Id != current.Id);
+    }
+
+    /// <summary>
+    ///     Gets the next possible similar process except the current.
+    /// </summary>
+    /// <returns>The next similar processes if found; otherwise null.</returns>
+    public static Process GetSimilarProcess()
+    {
+        return GetSimilarProcesses().FirstOrDefault();
+    }
+
+    /// <summary>
+    ///     Brings the given process on front. Normalizes it if minimized.
+    /// </summary>
+    /// <param name="process">The process to bring on front.</param>
+    /// <exception cref="NotSupportedException">The given process has no main window.</exception>
+    public static void BringInFront(Process process)
+    {
+        if (process.MainWindowHandle == IntPtr.Zero)
+            throw new NotSupportedException("The given process must have a main window.");
+
+        SetForegroundWindow(process.MainWindowHandle);
+        ShowWindow(process.MainWindowHandle, WindowShowStyle.Restore);
+    }
+
+    /// <summary>
+    ///     Executes a given process without display it with parameters; waits for the process to end and returns it result
+    ///     code and console output.
+    /// </summary>
+    /// <param name="executable">The process to execute.</param>
+    /// <param name="parameters">The process parameters.</param>
+    /// <returns>The result and output the process gave at runtime.</returns>
+    /// <exception cref="InvalidOperationException">The process could not be started.</exception>
+    public static ProcessResult ExecuteSilentlyAndWait(string executable, string parameters)
+    {
+        var startInfo = new ProcessStartInfo(executable)
         {
-            var processes = Process.GetProcessesByName(processName);
-            foreach (var process in processes)
-                Restart(process, delay);
-        }
+            Arguments = parameters,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true
+        };
+        var process = Process.Start(startInfo);
+        if (process == null)
+            throw new InvalidOperationException($"The process ('{executable}') could not be started.");
+        var output = process.StandardOutput.ReadToEnd();
+        process.WaitForExit();
 
-        /// <summary>
-        ///     Restarts the given process with a delay.
-        /// </summary>
-        /// <param name="process">The process to restart.</param>
-        /// <param name="delay">The delay in seconds when the process has to restart.</param>
-        /// <exception cref="ArgumentNullException">process is null.</exception>
-        public static void Restart(Process process, int delay = 2)
-        {
-            if (process == null)
-                throw new ArgumentNullException(nameof(process));
+        return new ProcessResult(process.ExitCode, output);
+    }
 
-            var module = process.MainModule;
-            if (module == null)
-                return;
+    /// <summary>
+    ///     Opens the given in the default application configured in the local system.
+    /// </summary>
+    /// <param name="file">The file to open.</param>
+    public static void OpenFileInLocalApp(string file)
+    {
+        Process.Start(new ProcessStartInfo(file) { UseShellExecute = true });
+    }
 
-            var info = new ProcessStartInfo
-            {
-                Arguments = $"/C ping 127.0.0.1 -n {delay} && \"{module.FileName}\"",
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                FileName = "cmd.exe"
-            };
-            Process.Start(info);
-            process.Kill();
-        }
-
-        /// <summary>
-        ///     Gets all similar processes except the current.
-        /// </summary>
-        /// <returns>The list of similar processes.</returns>
-        public static IEnumerable<Process> GetSimilarProcesses()
-        {
-            var current = Process.GetCurrentProcess();
-            return Process.GetProcessesByName(current.ProcessName).Where(x => x.Id != current.Id);
-        }
-
-        /// <summary>
-        ///     Gets the next possible similar process except the current.
-        /// </summary>
-        /// <returns>The next similar processes if found; otherwise null.</returns>
-        public static Process GetSimilarProcess()
-        {
-            return GetSimilarProcesses().FirstOrDefault();
-        }
-
-        /// <summary>
-        ///     Brings the given process on front. Normalizes it if minimized.
-        /// </summary>
-        /// <param name="process">The process to bring on front.</param>
-        /// <exception cref="NotSupportedException">The given process has no main window.</exception>
-        public static void BringInFront(Process process)
-        {
-            if (process.MainWindowHandle == IntPtr.Zero)
-                throw new NotSupportedException("The given process must have a main window.");
-
-            SetForegroundWindow(process.MainWindowHandle);
-            ShowWindow(process.MainWindowHandle, WindowShowStyle.Restore);
-        }
-
-        /// <summary>
-        ///     Executes a given process without display it with parameters; waits for the process to end and returns it result
-        ///     code and console output.
-        /// </summary>
-        /// <param name="executable">The process to execute.</param>
-        /// <param name="parameters">The process parameters.</param>
-        /// <returns>The result and output the process gave at runtime.</returns>
-        /// <exception cref="InvalidOperationException">The process could not be started.</exception>
-        public static ProcessResult ExecuteSilentlyAndWait(string executable, string parameters)
-        {
-            var startInfo = new ProcessStartInfo(executable)
-            {
-                Arguments = parameters,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true
-            };
-            var process = Process.Start(startInfo);
-            if (process == null)
-                throw new InvalidOperationException($"The process ('{executable}') could not be started.");
-            var output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            return new ProcessResult(process.ExitCode, output);
-        }
-
-        /// <summary>
-        ///     Opens the given in the default application configured in the local system.
-        /// </summary>
-        /// <param name="file">The file to open.</param>
-        public static void OpenFileInLocalApp(string file)
-        {
-            Process.Start(new ProcessStartInfo(file) {UseShellExecute = true});
-        }
-
-        private enum WindowShowStyle : uint
-        {
-            Hide = 0,
-            ShowNormal = 1,
-            ShowMinimized = 2,
-            ShowMaximized = 3,
-            Maximize = 3,
-            ShowNormalNoActivate = 4,
-            Show = 5,
-            Minimize = 6,
-            ShowMinNoActivate = 7,
-            ShowNoActivate = 8,
-            Restore = 9,
-            ShowDefault = 10,
-            ForceMinimized = 11
-        }
+    private enum WindowShowStyle : uint
+    {
+        Hide = 0,
+        ShowNormal = 1,
+        ShowMinimized = 2,
+        ShowMaximized = 3,
+        Maximize = 3,
+        ShowNormalNoActivate = 4,
+        Show = 5,
+        Minimize = 6,
+        ShowMinNoActivate = 7,
+        ShowNoActivate = 8,
+        Restore = 9,
+        ShowDefault = 10,
+        ForceMinimized = 11
     }
 }

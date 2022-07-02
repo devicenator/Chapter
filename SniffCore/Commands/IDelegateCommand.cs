@@ -7,16 +7,15 @@ using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore
+namespace SniffCore;
+
+/// <summary>
+///     Extends the ICommand with an <see cref="RaiseCanExecuteChanged" />.
+/// </summary>
+public interface IDelegateCommand : ICommand
 {
     /// <summary>
-    ///     Extends the ICommand with an <see cref="RaiseCanExecuteChanged" />.
+    ///     Raises the <see cref="ICommand.CanExecuteChanged" /> to have the <see cref="ICommand.CanExecute" /> checked again.
     /// </summary>
-    public interface IDelegateCommand : ICommand
-    {
-        /// <summary>
-        ///     Raises the <see cref="ICommand.CanExecuteChanged" /> to have the <see cref="ICommand.CanExecute" /> checked again.
-        /// </summary>
-        void RaiseCanExecuteChanged();
-    }
+    void RaiseCanExecuteChanged();
 }

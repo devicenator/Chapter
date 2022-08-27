@@ -5,7 +5,7 @@
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Extends the <see cref="object" /> with some helper methods.

@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>2.0.0</Version>
+    <Version>1.0.0</Version>
     <Authors>Devicenator</Authors>
     <Company>my-libraries</Company>
-    <Description>SniffCore brings base classes and basic operations to work in an MVVM environment.</Description>
+    <Description>Chapter brings base classes and basic operations to work in an MVVM environment.</Description>
     <Copyright>Copyright (c) 2022 David Wendland</Copyright>
-    <PackageProjectUrl>https://github.com/devicenator/SniffCore</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/devicenator/Chapter</PackageProjectUrl>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/devicenator/SniffCore</RepositoryUrl>
+    <RepositoryUrl>https://github.com/devicenator/Chapter</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

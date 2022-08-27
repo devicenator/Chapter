@@ -7,10 +7,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Is a base class for ViewModels implementing the <see cref="INotifyPropertyChanging" />,
@@ -39,27 +40,27 @@ namespace SniffCore;
 ///         set
 ///         {
 ///             NotifyAndSetIfChanged(ref _name, value);
-///             Validate();
+///             ValidateAsync().FireAndForget();
 ///         }
 ///     }
 /// 
-///     protected override void Validate()
+///     protected override async Task ValidateAsync()
 ///     {
-///         var isValid = !string.IsNullOrWhiteSpace(Name);
-///         Evaluate(isValid, new [] { "The user name cannot be empty" }, nameof(Name));
+///         var result = await _webApi.ValidateUserNameAsync(Name);
+///         Evaluate(result.IsValid, result.ErrorMessages, nameof(Name));
 ///     }
 /// }
 /// ]]>
 /// </code>
 /// </example>
-public abstract class ValidatableObservableObject : ObservableObject, INotifyDataErrorInfo
+public abstract class AsyncValidatableObservableObject : ObservableObject, INotifyDataErrorInfo
 {
     private readonly NotifyDataErrorInfo _errors;
 
     /// <summary>
     ///     Creates a new instance of <see cref="ValidatableObservableObject" />.
     /// </summary>
-    protected ValidatableObservableObject()
+    protected AsyncValidatableObservableObject()
     {
         _errors = new NotifyDataErrorInfo();
     }
@@ -168,7 +169,7 @@ public abstract class ValidatableObservableObject : ObservableObject, INotifyDat
     }
 
     /// <summary>
-    ///     Validates the properties.
+    ///     Validates the properties async.
     /// </summary>
-    protected abstract void Validate();
+    protected abstract Task ValidateAsync();
 }

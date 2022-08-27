@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Brings extensions to the AsyncEventHandler.

@@ -7,14 +7,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
-///     Brings helper for an easy maintain of property input validations.
+///     Is a base class for ViewModels implementing the <see cref="INotifyPropertyChanging" />,
+///     <see cref="INotifyPropertyChanged" /> and <see cref="INotifyDataErrorInfo" /> provides easy access to that.
 /// </summary>
 /// <example>
 ///     <code lang="xaml">
@@ -29,23 +29,9 @@ namespace SniffCore;
 /// </code>
 ///     <code lang="csharp">
 /// <![CDATA[
-/// public class PersonViewModel : ObservableObject, INotifyDataErrorInfo
+/// public class PersonViewModel : ValidatableObservableObject
 /// {
-///     private NotifyDataErrorInfo _errors;
 ///     private string _name;
-/// 
-///     public PersonViewModel()
-///     {
-///         _errors = new NotifyDataErrorInfo();
-///     }
-/// 
-///     public bool HasErrors => _errors.HasErrors;
-/// 
-///     public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
-///     {
-///         add => _errors.ErrorsChanged += value;
-///         remove => _errors.ErrorsChanged -= value;
-///     }
 /// 
 ///     public string Name
 ///     {
@@ -57,30 +43,25 @@ namespace SniffCore;
 ///         }
 ///     }
 /// 
-///     private void Validate()
+///     protected override void Validate()
 ///     {
 ///         var isValid = !string.IsNullOrWhiteSpace(Name);
-///         _errors.Evaluate(isValid, new [] { "The user name cannot be empty" }, nameof(Name));
-///     }
-///
-///     public IEnumerable GetErrors(string propertyName)
-///     {
-///         return _errors.GetErrors(propertyName);
+///         Evaluate(isValid, new [] { "The user name cannot be empty" }, nameof(Name));
 ///     }
 /// }
 /// ]]>
 /// </code>
 /// </example>
-public class NotifyDataErrorInfo : INotifyDataErrorInfo
+public abstract class ValidatableObservableObject : ObservableObject, INotifyDataErrorInfo
 {
-    private readonly Dictionary<string, List<string>> _errors;
+    private readonly NotifyDataErrorInfo _errors;
 
     /// <summary>
-    ///     Creates a new instance of <see cref="NotifyDataErrorInfo" />.
+    ///     Creates a new instance of <see cref="ValidatableObservableObject" />.
     /// </summary>
-    public NotifyDataErrorInfo()
+    protected ValidatableObservableObject()
     {
-        _errors = new Dictionary<string, List<string>>();
+        _errors = new NotifyDataErrorInfo();
     }
 
     /// <summary>
@@ -90,20 +71,22 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// <returns>The recorded errors for a given property if any; otherwise an empty list.</returns>
     public IEnumerable GetErrors(string propertyName)
     {
-        if (_errors.ContainsKey(propertyName))
-            return _errors[propertyName];
-        return Array.Empty<string>();
+        return _errors.GetErrors(propertyName);
     }
 
     /// <summary>
     ///     Gets a value indicating if there are any errors.
     /// </summary>
-    public bool HasErrors => _errors.Any();
+    public bool HasErrors => _errors.HasErrors;
 
     /// <summary>
     ///     Raised if the errors for a property has been changed.
     /// </summary>
-    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+    {
+        add => _errors.ErrorsChanged += value;
+        remove => _errors.ErrorsChanged -= value;
+    }
 
     /// <summary>
     ///     Updates the state of the given error.
@@ -111,12 +94,9 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// <param name="isValid">The indicator if the property is valid. If true all errors for the property will be cleared.</param>
     /// <param name="errors">The errors to add in the case isValid is false.</param>
     /// <param name="propertyName">The name of the property.</param>
-    public void Evaluate(bool isValid, IEnumerable<string> errors, string propertyName)
+    protected void Evaluate(bool isValid, IEnumerable<string> errors, string propertyName)
     {
-        if (isValid)
-            _errors.Remove(propertyName);
-        _errors[propertyName] = errors.ToList();
-        OnErrorsChanged(propertyName);
+        _errors.Evaluate(isValid, errors, propertyName);
     }
 
     /// <summary>
@@ -125,12 +105,9 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// <param name="isValid">The indicator if the property is valid. If true all errors for the property will be cleared.</param>
     /// <param name="error">The error to add in the case isValid is false.</param>
     /// <param name="propertyName">The name of the property.</param>
-    public void Evaluate(bool isValid, string error, string propertyName)
+    protected void Evaluate(bool isValid, string error, string propertyName)
     {
-        if (isValid)
-            _errors.Remove(propertyName);
-        _errors[propertyName].Add(error);
-        OnErrorsChanged(propertyName);
+        _errors.Evaluate(isValid, error, propertyName);
     }
 
     /// <summary>
@@ -138,14 +115,9 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// </summary>
     /// <param name="errors">The errors to add.</param>
     /// <param name="propertyName">The name of the property.</param>
-    public void AddErrors(IEnumerable<string> errors, string propertyName)
+    protected void AddErrors(IEnumerable<string> errors, string propertyName)
     {
-        if (!_errors.ContainsKey(propertyName))
-            _errors[propertyName] = new List<string>();
-        foreach (var error in errors)
-            if (!_errors[propertyName].Contains(error))
-                _errors[propertyName].Add(error);
-        OnErrorsChanged(propertyName);
+        _errors.AddErrors(errors, propertyName);
     }
 
     /// <summary>
@@ -153,13 +125,9 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// </summary>
     /// <param name="error">The error to add.</param>
     /// <param name="propertyName">The name of the property.</param>
-    public void AddError(string error, string propertyName)
+    protected void AddError(string error, string propertyName)
     {
-        if (!_errors.ContainsKey(propertyName))
-            _errors[propertyName] = new List<string>();
-        if (!_errors[propertyName].Contains(error))
-            _errors[propertyName].Add(error);
-        OnErrorsChanged(propertyName);
+        _errors.AddError(error, propertyName);
     }
 
     /// <summary>
@@ -167,14 +135,9 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// </summary>
     /// <param name="errors">The errors to remove.</param>
     /// <param name="propertyName">The name of the property.</param>
-    public void RemoveErrors(IEnumerable<string> errors, string propertyName)
+    protected void RemoveErrors(IEnumerable<string> errors, string propertyName)
     {
-        if (!_errors.ContainsKey(propertyName))
-            return;
-
-        foreach (var error in errors)
-            _errors[propertyName].Remove(error);
-        OnErrorsChanged(propertyName);
+        _errors.RemoveErrors(errors, propertyName);
     }
 
     /// <summary>
@@ -182,38 +145,30 @@ public class NotifyDataErrorInfo : INotifyDataErrorInfo
     /// </summary>
     /// <param name="error">The error to remove.</param>
     /// <param name="propertyName">The name of the property.</param>
-    public void RemoveError(string error, string propertyName)
+    protected void RemoveError(string error, string propertyName)
     {
-        if (!_errors.ContainsKey(propertyName))
-            return;
-
-        _errors[propertyName].Remove(error);
-        OnErrorsChanged(propertyName);
+        _errors.RemoveError(error, propertyName);
     }
 
     /// <summary>
     ///     Clears all errors for the given property.
     /// </summary>
     /// <param name="propertyName">The name of the validated property.</param>
-    public void ResetErrors(string propertyName)
+    protected void ResetErrors(string propertyName)
     {
-        _errors.Remove(propertyName);
-        OnErrorsChanged(propertyName);
+        _errors.ResetErrors(propertyName);
     }
 
     /// <summary>
     ///     Clears all errors for all properties.
     /// </summary>
-    public void ResetAllErrors()
+    protected void ResetAllErrors()
     {
-        var propertyNames = _errors.Keys.ToList();
-        _errors.Clear();
-        foreach (var propertyName in propertyNames)
-            OnErrorsChanged(propertyName);
+        _errors.ResetAllErrors();
     }
 
-    private void OnErrorsChanged(string propertyName)
-    {
-        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-    }
+    /// <summary>
+    ///     Validates the properties.
+    /// </summary>
+    protected abstract void Validate();
 }

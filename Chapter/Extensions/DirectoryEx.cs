@@ -9,7 +9,7 @@ using System.Security;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Provides copy directories and move over system partitions.

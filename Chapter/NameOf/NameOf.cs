@@ -7,7 +7,7 @@ using System;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Provides methods for an easy work with namespace and type names in combination with nameof.

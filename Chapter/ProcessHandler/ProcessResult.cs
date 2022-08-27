@@ -5,7 +5,7 @@
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Contains the process execution result data used by

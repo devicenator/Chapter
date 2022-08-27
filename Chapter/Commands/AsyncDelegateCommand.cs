@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Provides a way to call an async callback from an ICommand.

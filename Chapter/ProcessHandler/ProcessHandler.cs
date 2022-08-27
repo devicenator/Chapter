@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Brings the possibility to work with processes.

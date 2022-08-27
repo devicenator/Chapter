@@ -7,7 +7,7 @@ using System;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     An EventArgs with one parameter.

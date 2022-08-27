@@ -1,11 +1,11 @@
-SniffCore
+Chapter
 ===
 
-SniffCore brings base classes and basic operations to work in an MVVM environment.
+Chapter brings base classes and basic operations to work in an MVVM environment.
 
 ## Links
-* [NuGet](https://www.nuget.org/packages/SniffCore)
-* [GitHub](https://github.com/devicenator/SniffCore)
+* [NuGet](https://www.nuget.org/packages/Chapter)
+* [GitHub](https://github.com/devicenator/Chapter)
 
 ## License
 Copyright (c) David Wendland. All rights reserved.  

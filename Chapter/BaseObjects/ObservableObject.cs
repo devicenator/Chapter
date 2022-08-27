@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Is a base class for ViewModels implementing the <see cref="INotifyPropertyChanging" /> and

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Extends a task with useful methods.

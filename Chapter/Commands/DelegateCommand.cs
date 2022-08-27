@@ -7,7 +7,7 @@ using System;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Provides a way to call a callback from an ICommand.

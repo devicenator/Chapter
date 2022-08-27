@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
 
-namespace SniffCore;
+namespace Chapter;
 
 /// <summary>
 ///     Extends the ICommand with an <see cref="RaiseCanExecuteChanged" />.
